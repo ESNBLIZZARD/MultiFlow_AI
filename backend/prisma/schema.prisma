@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum for assistant modes
+enum Template {
+  research_assistant
+  travel_planner
+  resume_enhancer
+  coding_consultant
+  recipe_grocery
+  fitness_planner
+  book_summary
+}
+
+model Task {
+  id        String   @id @default(uuid())
+  template  Template
+  inputText String   @db.Text
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  steps     Step[]
+}
+
+model Step {
+  id         String   @id @default(uuid())
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId     String
+  stepIndex  Int
+  name       String
+  status     String   @default("pending")
+  prompt     String?  @db.Text
+  output     Json?
+  error      String?  @db.Text
+  startedAt  DateTime?
+  finishedAt DateTime?
+}

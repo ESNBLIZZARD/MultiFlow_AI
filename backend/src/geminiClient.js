@@ -18,6 +18,7 @@ export async function generateText({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig: { maxOutputTokens },
     });
+    console.log(response, "Response from Gemini");
 
     const text = response?.response?.text?.() ?? "";
     const reasoning = response?.response?.candidates?.[0]?.thinking ?? null;

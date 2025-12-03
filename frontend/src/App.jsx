@@ -8,16 +8,13 @@ import ResponseBox from "./components/ResponseBox";
 const API_BASE = "http://localhost:4000/api/tasks";
 
 export default function App() {
-  const [template, setTemplate] = useState(() => localStorage.getItem("template") || "research_assistant");
+  const [template, setTemplate] = useState("research_assistant");
   const [inputText, setInputText] = useState("");
-  const [thinking, setThinking] = useState(() => JSON.parse(localStorage.getItem("deepThink")) ?? false);
+  const [thinking, setThinking] = useState(false);
 
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(false);
   const pollRef = useRef(null);
-
-  useEffect(() => localStorage.setItem("deepThink", JSON.stringify(thinking)), [thinking]);
-  useEffect(() => localStorage.setItem("template", template), [template]);
 
   function startPolling(id) {
     if (pollRef.current) clearInterval(pollRef.current);
@@ -25,10 +22,10 @@ export default function App() {
       try {
         const res = await fetch(`${API_BASE}/${id}`);
         const data = await res.json();
-        console.log(data, "Dataaaaaaaa");
+        console.log(JSON.stringify(res, null, 2), "Dataaaaaaaa");
         setTask(data);
 
-        if (data.status === "completed" || data.status === "failed") {
+        if (data.status === "completed" || data.status === "failed") {  
           clearInterval(pollRef.current);
           pollRef.current = null;
           setLoading(false);
@@ -63,41 +60,41 @@ export default function App() {
 
   useEffect(() => () => pollRef.current && clearInterval(pollRef.current), []);
 
-  return (
-    <div className="min-h-screen bg-linear-to-br from-[#0f0f10] via-[#1b1b1e] to-[#111113] text-white px-6 py-12">
-      <div className="max-w-5xl mx-auto">
+ return (
+    <div className="min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 text-white px-4 sm:px-6 py-8 sm:py-12">
+      <div className="max-w-6xl mx-auto">
 
-        {/* HEADER */}
-        <div className="flex justify-between items-center mb-10">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-12 gap-4">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">Multiflow AI</h1>
-            <p className="text-neutral-400 mt-1 text-sm">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Multiflow AI
+            </h1>
+            <p className="text-slate-400 mt-1 sm:mt-2 text-sm sm:text-base">
               Multi-step Intelligent Task Processing Engine
             </p>
           </div>
         </div>
 
-        {/* MAIN CARD */}
         <div className="
-          bg-white/5 border border-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl 
-          p-10 space-y-10 transition-all 
+          bg-linear-to-br from-slate-900/80 to-indigo-950/50 
+          border border-indigo-500/20 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl 
+          p-6 sm:p-8 lg:p-10 space-y-8 sm:space-y-10 transition-all 
         ">
 
-          {/* SELECT + TOGGLE */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
               <TemplateSelect value={template} onChange={setTemplate} />
             </div>
 
-            <div className="flex items-center justify-end md:justify-center">
+            <div className="flex items-center justify-start lg:justify-center">
               <ThinkingToggle enabled={thinking} onChange={setThinking} />
             </div>
           </div>
 
-          {/* QUERY INPUT */}
           <div className="
-            bg-white/5 border border-white/10 
-            p-7 rounded-2xl shadow-inner
+            bg-linear-to-br from-slate-900/60 to-indigo-900/30 
+            border border-indigo-400/20 
+            p-5 sm:p-7 rounded-xl sm:rounded-2xl shadow-lg
           ">
             <TaskInput
               value={inputText}
@@ -107,29 +104,29 @@ export default function App() {
             />
           </div>
 
-          {/* TIMELINE */}
           <div>
-            <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 text-neutral-300">
-              <span className="h-3 w-3 bg-indigo-500 shadow-md rounded-full"></span>
+            <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3 text-white">
+              <span className="h-2.5 w-2.5 sm:h-3 sm:w-3 bg-linear-to-r from-indigo-500 to-purple-500 shadow-lg shadow-indigo-500/50 rounded-full animate-pulse shrink-0"></span>
               Progress Timeline
             </h2>
 
             <div className="
-              bg-white/5 border border-white/10 rounded-2xl p-7 shadow-xl
+              bg-linear-to-br from-slate-900/60 to-indigo-900/30 
+              border border-indigo-400/20 rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-xl
             ">
               <StepsTimeline steps={task?.steps} />
             </div>
           </div>
 
-          {/* FINAL OUTPUT */}
           <div>
-            <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 text-neutral-300">
-              <span className="h-3 w-3 bg-green-500 shadow-md rounded-full"></span>
+            <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3 text-white">
+              <span className="h-2.5 w-2.5 sm:h-3 sm:w-3 bg-linear-to-r from-emerald-500 to-green-500 shadow-lg shadow-emerald-500/50 rounded-full shrink-0"></span>
               Final Output
             </h2>
 
             <div className="
-              bg-white/5 border border-white/10 rounded-2xl p-7 shadow-xl
+              bg-linear-to-br from-slate-900/60 to-indigo-900/30 
+              border border-indigo-400/20 rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-xl
             ">
               <ResponseBox task={task} thinkingEnabled={thinking} />
             </div>

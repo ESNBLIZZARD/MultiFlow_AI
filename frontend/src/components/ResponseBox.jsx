@@ -1,7 +1,7 @@
 export default function ResponseBox({ task, thinkingEnabled }) {
   if (!task)
     return (
-      <p className="text-gray-400 text-sm italic">
+      <p className="text-slate-400 text-sm sm:text-base italic">
         No output yet...
       </p>
     );
@@ -10,61 +10,60 @@ export default function ResponseBox({ task, thinkingEnabled }) {
   const finalOutput = finalStep?.output;
 
   return (
-    <div className="space-y-8">
-
-      {/* STATUS BADGE */}
+    <div className="space-y-6 sm:space-y-8">
       <span
         className={`
-          px-4 py-1.5 text-xs font-semibold rounded-full tracking-wide
-          shadow-md border
+          px-4 sm:px-5 py-1.5 sm:py-2 text-xs font-bold rounded-full tracking-wider uppercase
+          shadow-lg border inline-block
           ${
             task.status === "completed"
-              ? "bg-emerald-900/20 text-emerald-400 border-emerald-500/30"
+              ? "bg-linear-to-r from-emerald-600 to-green-600 text-white border-emerald-400/50 shadow-emerald-500/30"
               : task.status === "failed"
-              ? "bg-red-900/20 text-red-400 border-red-500/30"
-              : "bg-yellow-900/20 text-yellow-300 border-yellow-500/30"
+              ? "bg-linear-to-r from-red-600 to-rose-600 text-white border-red-400/50 shadow-red-500/30"
+              : "bg-linear-to-r from-amber-600 to-yellow-600 text-white border-yellow-400/50 shadow-yellow-500/30"
           }
         `}
       >
         {task.status.toUpperCase()}
       </span>
 
-      {/* OUTPUT CARD */}
       <div className="
-        bg-linear-to-br from-[#111214] to-[#18191c]
-        border border-white/10 rounded-2xl p-6 shadow-xl
-        space-y-4 transition-all mt-1
+        bg-linear-to-br from-slate-900/90 to-indigo-950/60
+        border border-indigo-400/30 rounded-xl sm:rounded-2xl p-5 sm:p-7 shadow-2xl
+        space-y-4 sm:space-y-5 transition-all
       ">
-        <h3 className="text-lg font-semibold text-white/90">
-          📄 Final Output
+        <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+          <span className="text-xl sm:text-2xl">📄</span>
+          Final Output
         </h3>
 
         <div
           className="
-            bg-[#0b0c0e] border border-white/10 rounded-xl p-5 
-            shadow-inner text-sm text-gray-200 leading-relaxed
-            whitespace-pre-wrap font-medium
+            bg-slate-950/70 border border-indigo-500/20 rounded-lg sm:rounded-xl p-4 sm:p-6 
+            shadow-inner text-sm sm:text-base text-slate-200 leading-relaxed
+            whitespace-pre-wrap wrap-break-words
           "
         >
           {finalOutput || "Processing..."}
         </div>
       </div>
 
-      {/* REASONING BOX */}
       {thinkingEnabled && task.reasoning && (
         <div className="
-          bg-linear-to-br from-indigo-900/20 to-indigo-700/10
-          border border-indigo-500/20 rounded-2xl p-6 shadow-lg
-          space-y-3
+          bg-linear-to-br from-purple-900/30 to-indigo-900/20
+          border border-purple-400/30 rounded-xl sm:rounded-2xl p-5 sm:p-7 shadow-lg
+          space-y-3 sm:space-y-4
         ">
-          <h4 className="text-sm font-semibold text-indigo-300">
-            🧠 DeepThink Reasoning
+          <h4 className="text-sm sm:text-base font-bold text-purple-300 flex items-center gap-2">
+            <span className="text-lg sm:text-xl">🧠</span>
+            DeepThink Reasoning
           </h4>
 
           <pre
             className="
-              whitespace-pre-wrap text-indigo-100 text-sm 
-              leading-relaxed bg-black/20 p-4 rounded-lg border border-indigo-500/20
+              whitespace-pre-wrap text-purple-100 text-xs sm:text-sm 
+              leading-relaxed bg-slate-950/50 p-4 sm:p-5 rounded-lg sm:rounded-xl border border-purple-500/20
+              wrap-break-words overflow-x-auto
             "
           >
             {task.reasoning}

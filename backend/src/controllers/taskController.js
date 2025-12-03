@@ -1,35 +1,35 @@
-import { createTask, getTaskWithSteps } from "../db.js";
+import { createTask } from "../db.js";
 import { runTask } from "../orchestrators/taskOrchestrator.js";
-import { assistantTemplates } from "../templates/assistantTemplate.js";
 
 export async function createTaskController(req, res) {
   try {
     const { template, inputText } = req.body;
 
-    // Validate template against enum
-    if (!assistantTemplates[template]) {
-      return res
-        .status(400)
-        .json({ error: `Invalid template. Choose one of: ${Object.keys(assistantTemplates).join(", ")}` });
+    if (!template || typeof inputText !== "string") {
+      return res.status(400).json({ error: "template and inputText are required" });
     }
 
     const task = await createTask({ template, inputText });
 
-    // Run task asynchronously
+    // run in background
     runTask(task);
 
-    res.json(task);
+    // return a compact shape the frontend expects
+    return res.json({ taskId: task.id, id: task.id });
   } catch (err) {
     console.error("Create Task Error:", err);
-    res.status(500).json({ error: "Failed to create task" });
+    return res.status(500).json({ error: "Failed to create task" });
   }
 }
 
+import { getTaskWithSteps } from "../db.js";
 export async function getTaskController(req, res) {
   try {
     const task = await getTaskWithSteps(req.params.id);
-    res.json(task);
+    if (!task) return res.status(404).json({ error: "Task not found" });
+    return res.json(task);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch task" });
+    console.error("Get Task Error:", err);
+    return res.status(500).json({ error: "Failed to fetch task" });
   }
 }

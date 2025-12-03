@@ -17,46 +17,73 @@ export default function App() {
   const pollRef = useRef(null);
 
   function startPolling(id) {
-    if (pollRef.current) clearInterval(pollRef.current);
-    pollRef.current = setInterval(async () => {
-      try {
-        const res = await fetch(`${API_BASE}/${id}`);
-        const data = await res.json();
-        console.log(JSON.stringify(res, null, 2), "Dataaaaaaaa");
-        setTask(data);
-
-        if (data.status === "completed" || data.status === "failed") {  
-          clearInterval(pollRef.current);
-          pollRef.current = null;
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }, 1200);
+  if (!id) {
+    console.warn("startPolling called with falsy id:", id);
+    return;
   }
+
+  if (pollRef.current) clearInterval(pollRef.current);
+  pollRef.current = setInterval(async () => {
+    try {
+      const res = await fetch(`${API_BASE}/${id}`);
+      // log status so you don't get {} in console
+      const data = await res.json();
+      console.log("POLL RESPONSE:", data);
+      setTask(data);
+
+      if (data?.status === "completed" || data?.status === "failed") {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Polling error:", err);
+    }
+  }, 1200);
+}
+
 
   async function handleStartTask() {
-    if (!inputText.trim()) return alert("Please enter a query.");
-    setLoading(true);
-    setTask(null);
+  if (!inputText.trim()) return alert("Please enter a query.");
+  setLoading(true);
+  setTask(null);
 
-    try {
-      const res = await fetch(API_BASE, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ template, inputText }),
-      });
+  try {
+    const res = await fetch(API_BASE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ template, inputText }),
+    });
 
-      const created = await res.json();
-      setTask(created);
-      startPolling(created.id);
-    } catch (err) {
-      console.error(err);
-      alert("Error creating task: " + err.message);
+    const created = await res.json();
+    console.log("CREATE RESPONSE:", created);
+
+    // accept several payload shapes
+    const id =
+      created?.id ||
+      created?.taskId ||
+      created?.task?.id ||
+      created?.data?.id ||
+      null;
+
+    if (!id) {
+      console.error("Task creation response missing id:", created);
+      alert("Server did not return a task id. See console for details.");
       setLoading(false);
+      return;
     }
+
+    // set a minimal skeleton so UI shows something immediately
+    setTask({ id, status: "pending", steps: [] });
+
+    startPolling(id);
+  } catch (err) {
+    console.error(err);
+    alert("Error creating task: " + err.message);
+    setLoading(false);
   }
+}
+
 
   useEffect(() => () => pollRef.current && clearInterval(pollRef.current), []);
 

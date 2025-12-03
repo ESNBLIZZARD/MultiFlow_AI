@@ -1,109 +1,108 @@
 export const assistantTemplates = {
-
-    "research_assistant": [
+  research_assistant: [
     {
       name: "intent_classification",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `You are a research assistant. Classify the user's request and produce a short research plan in JSON. Request: ${input}\nReturn JSON with keys: {"category","topics","plan"}`,
+        `You are a research assistant. Classify the user's request and produce a short research plan in JSON.\nRequest: ${input}\nReturn JSON with keys: {"category","topics","plan"}`,
     },
     {
       name: "summarize_findings",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input, context) =>
-        `You are summarizing research findings. Use the plan and user input to produce a concise executive summary and bullets. Input: ${input} PlanContext:${JSON.stringify(
+        `You are summarizing research findings.\nUse the plan and user input to produce a concise executive summary.\nUser Input: ${input}\nPlan Context: ${JSON.stringify(
           context
         )}`,
     },
   ],
 
-  "travel_planner": [
+  travel_planner: [
     {
       name: "classify_travel_needs",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `Classify travel preferences and budget for: ${input}`,
+        `Classify the user's travel preferences, budget, and trip style for: ${input}`,
     },
     {
       name: "generate_itinerary",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `Create a 3-day itinerary for: ${input}`,
+        `Create a detailed 3-day itinerary for the following travel request: ${input}`,
     },
     {
       name: "packing_list",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `Generate a packing checklist for: ${input}`,
+        `Generate a packing checklist based on the travel plan: ${input}`,
     },
   ],
 
-  "resume_enhancer": [
+  resume_enhancer: [
     {
       name: "extract_experience",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `Extract key experiences and achievements from: ${input}`,
+        `Extract key experiences, achievements, and strengths from the following text:\n${input}`,
     },
     {
       name: "enhance_resume",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `Rewrite the following content as a polished resume bullet list: ${input}`,
+        `Rewrite the following experience into polished, impact-driven resume bullet points:\n${input}`,
     },
   ],
 
-  "coding_consultant": [
+  coding_consultant: [
     {
       name: "code_review",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `Review the following code, explain issues, and suggest improvements: ${input}`,
+        `Perform a detailed code review. Identify issues, optimization opportunities, and best-practice improvements.\nCode:\n${input}`,
     },
   ],
 
-  "recipe_grocery": [
+  recipe_grocery: [
     {
       name: "generate_recipe",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `Generate a recipe based on ingredients/preferences: ${input}`,
+        `Generate a recipe using the following ingredients or preferences:\n${input}`,
     },
     {
       name: "generate_grocery_list",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `Generate a grocery list based on the recipe: ${input}`,
+        `Based on the generated recipe, produce a grocery list for:\n${input}`,
     },
   ],
 
-  "fitness_planner": [
+  fitness_planner: [
     {
       name: "generate_plan",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `Create a personalized fitness plan based on: ${input}`,
+        `Create a personalized and structured fitness plan based on:\n${input}`,
     },
   ],
 
-  "book_summary": [
+  book_summary: [
     {
       name: "summarize_book",
       type: "llm",
       model: "gemini-2.5-flash",
       preparePrompt: (input) =>
-        `Summarize the book and produce actionable steps: ${input}`,
+        `Provide a concise summary of this book and outline actionable steps:\n${input}`,
     },
   ],
 };

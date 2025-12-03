@@ -1,4 +1,4 @@
-import prisma from "../src/prisma.js"
+import prisma from "../src/prisma.js"; // adjust path if your prisma client is elsewhere
 
 export async function createTask({ template, inputText }) {
   return prisma.task.create({ data: { template, inputText } });
@@ -11,7 +11,7 @@ export async function getTask(id) {
 export async function getTaskWithSteps(id) {
   return prisma.task.findUnique({
     where: { id },
-    include: { steps: { orderBy: { stepIndex: 'asc' } } },
+    include: { steps: { orderBy: { stepIndex: "asc" } } },
   });
 }
 
@@ -20,6 +20,7 @@ export async function updateTaskStatus(id, status) {
 }
 
 export async function createStep(step) {
+  // step object should match Prisma Step model JSON column names
   return prisma.step.create({ data: step });
 }
 

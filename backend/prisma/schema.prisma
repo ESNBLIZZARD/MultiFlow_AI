@@ -24,6 +24,7 @@ model Task {
   template  Template
   inputText String   @db.Text
   status    String   @default("pending")
+  thinkingEnabled Boolean @default(false)
   createdAt DateTime @default(now())
   steps     Step[]
 }

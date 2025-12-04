@@ -1,7 +1,14 @@
-import prisma from "../src/prisma.js"; // adjust path if your prisma client is elsewhere
+import prisma from "../src/prisma.js";
 
-export async function createTask({ template, inputText }) {
-  return prisma.task.create({ data: { template, inputText } });
+// Create a new task with thinkingEnabled properly passed
+export async function createTask({ template, inputText, thinkingEnabled = false }) {
+  return prisma.task.create({
+    data: {
+      template,
+      inputText,
+      thinkingEnabled, 
+    },
+  });
 }
 
 export async function getTask(id) {
@@ -16,14 +23,19 @@ export async function getTaskWithSteps(id) {
 }
 
 export async function updateTaskStatus(id, status) {
-  return prisma.task.update({ where: { id }, data: { status } });
+  return prisma.task.update({
+    where: { id },
+    data: { status },
+  });
 }
 
 export async function createStep(step) {
-  // step object should match Prisma Step model JSON column names
   return prisma.step.create({ data: step });
 }
 
 export async function updateStep(id, data) {
-  return prisma.step.update({ where: { id }, data });
+  return prisma.step.update({
+    where: { id },
+    data,
+  });
 }

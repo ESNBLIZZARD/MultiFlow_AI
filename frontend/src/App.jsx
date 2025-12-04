@@ -52,7 +52,7 @@ export default function App() {
     const res = await fetch(API_BASE, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ template, inputText }),
+      body: JSON.stringify({ template, inputText, thinkingEnabled: thinking, }),
     });
 
     const created = await res.json();

@@ -65,7 +65,7 @@ export default function ResponseBox({ task, thinkingEnabled }) {
                   return out.reasoning || null;
                 })
                 .filter(Boolean);
-              return reasonParts.length ? reasonParts.join("\n\n---\n\n") : "No deep reasoning available.";
+              return reasonParts.length ? reasonParts.join("\n\n---\n\n") : "None";
             })()}
           </pre>
         </div>

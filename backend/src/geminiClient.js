@@ -8,42 +8,54 @@ const client = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 export async function generateText({
   model = "gemini-2.5-flash",
   prompt,
-  maxOutputTokens = 800,
+  maxOutputTokens = 2000,   // ⬅ INCREASED TO PREVENT CUT-OFF
+  thinkingEnabled = false,
 }) {
   try {
     const genModel = client.getGenerativeModel({ model });
 
+    // Enhanced prompt for better reasoning
+    const finalPrompt = thinkingEnabled
+      ? `Think step-by-step and then answer clearly.\n\n${prompt}`
+      : prompt;
+
     const response = await genModel.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { maxOutputTokens },
+      contents: [{ role: "user", parts: [{ text: finalPrompt }] }],
+      generationConfig: {
+        maxOutputTokens,
+        temperature: 0.6,
+      },
     });
 
-    // Console log raw response for debugging (can remove later)
-    console.log("Gemini raw response:", response);
-
-    // Candidate (first)
-    const candidate = response?.response?.candidates?.[0] ?? null;
-
-    // Prefer response.response.text() if available
+    // ---- SAFE EXTRACTION OF TEXT ----
     let text = "";
-    try {
-      // some SDK responses expose .response.text as a function
-      text = typeof response?.response?.text === "function" ? response.response.text() : "";
-    } catch (_) {
-      text = "";
+
+    // New API structure: text exists inside candidates[].content.parts[].text
+    const candidates = response?.response?.candidates || [];
+
+    for (const c of candidates) {
+      const parts = c?.content?.parts || [];
+      for (const p of parts) {
+        if (p.text) text += p.text;
+      }
     }
 
-    // Fallback: try to extract from candidate.content.parts
-    if (!text && candidate?.content?.parts) {
-      text = candidate.content.parts.map((p) => (typeof p === "string" ? p : p.text)).filter(Boolean).join("\n");
+    // FINAL FALLBACK (rare)
+    if (!text) {
+      text = response?.response?.text?.() || "";
     }
 
-    // reasoning (thinking) may be candidate.thinking or candidate.metadata.thoughts etc.
-    const reasoning = candidate?.thinking ?? candidate?.metadata?.thoughts ?? null;
+    // Ensures clean output
+    text = (text || "").trim();
 
-    return { text: text ?? "", reasoning: reasoning ?? null };
+    // Optional reasoning (Gemini sometimes hides it)
+    const reasoning =
+      response?.response?.candidates?.[0]?.groundingMetadata?.confidenceScores ||
+      null;
+
+    return { text, reasoning };
   } catch (err) {
     console.error("Gemini Error:", err);
-    return { text: "", reasoning: null };
+    return { text: "", reasoning: "" };
   }
 }

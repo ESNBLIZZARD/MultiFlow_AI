@@ -1,4 +1,5 @@
-export default function ThinkingToggle({ enabled, onChange }) {
+export default function ThinkingToggle({ enabled, onChange }) { 
+  console.log(enabled, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
   return (
     <div className="flex items-center gap-3">
       <button

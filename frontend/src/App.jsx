@@ -5,7 +5,7 @@ import TaskInput from "./components/TaskInput";
 import StepsTimeline from "./components/StepsTimeline";
 import ResponseBox from "./components/ResponseBox";
 
-const API_BASE = "http://localhost:4000/api/tasks";
+const API_BASE = "https://multiflow-ai.onrender.com/api/tasks";
 
 export default function App() {
   const [template, setTemplate] = useState("research_assistant");

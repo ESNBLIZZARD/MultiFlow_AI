@@ -7,7 +7,17 @@ import tasksRouter from "./routes/tasks.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", 
+      "https://multiflow-ai.vercel.app/",   
+    ],
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
 app.use(express.json());
 
 app.use("/api/tasks", tasksRouter);

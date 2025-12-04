@@ -37,8 +37,9 @@ model Step {
   name       String
   status     String   @default("pending")
   prompt     String?  @db.Text
-  output     Json?
+  output     String?  @db.Text  
   error      String?  @db.Text
   startedAt  DateTime?
   finishedAt DateTime?
 }
+

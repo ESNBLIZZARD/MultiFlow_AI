@@ -43,7 +43,7 @@ export async function runTask(task) {
       await updateStep(stepRecord.id, {
         status: "completed",
         prompt,
-        output: { text: cleanText },
+        output: JSON.stringify({ text: finalText?.trim(), reasoning: finalReason }),
         finishedAt: new Date(),
       });
 

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Step" ALTER COLUMN "output" SET DATA TYPE TEXT;

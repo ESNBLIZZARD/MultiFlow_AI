@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", 
-      "https://multiflow-ai.vercel.app/",   
+      "https://multiflow-ai.vercel.app",   
     ],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
